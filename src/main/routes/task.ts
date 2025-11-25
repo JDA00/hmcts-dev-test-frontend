@@ -4,7 +4,7 @@
  */
 
 import { Application, Request, Response } from 'express';
-import { TASK_STATUSES, TaskFormData } from '../types/task';
+import { TaskFormData } from '../types/task';
 import { validateTask, buildDateTimeFromForm } from '../validators/taskValidator';
 import { createTask, TaskServiceError } from '../services/taskService';
 
@@ -13,9 +13,7 @@ export default function (app: Application): void {
    * GET /task/create - Display the task creation form
    */
   app.get('/task/create', (req: Request, res: Response) => {
-    res.render('task/create', {
-      statuses: TASK_STATUSES,
-    });
+    res.render('task/create');
   });
 
   /**
@@ -32,7 +30,6 @@ export default function (app: Application): void {
         errors,
         errorSummary: errors,
         values: formData,
-        statuses: TASK_STATUSES,
       });
     }
 
@@ -41,7 +38,7 @@ export default function (app: Application): void {
       const taskRequest = {
         title: formData.title!.trim(),
         description: formData.description?.trim() || undefined,
-        status: formData.status!,
+        status: 'PENDING', // New tasks always start as pending
         dueDateTime: buildDateTimeFromForm(formData),
       };
 
@@ -66,7 +63,6 @@ export default function (app: Application): void {
         errors: [{ field: 'form', text: errorMessage, href: '#' }],
         errorSummary: [{ field: 'form', text: errorMessage, href: '#' }],
         values: formData,
-        statuses: TASK_STATUSES,
       });
     }
   });

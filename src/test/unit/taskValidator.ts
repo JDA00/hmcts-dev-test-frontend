@@ -7,7 +7,6 @@ describe('Task Validator', () => {
   const createValidFormData = (overrides: Partial<TaskFormData> = {}): TaskFormData => ({
     title: 'Test Task',
     description: 'Test description',
-    status: 'PENDING',
     'dueDate-day': '25',
     'dueDate-month': '12',
     'dueDate-year': '2025',
@@ -92,59 +91,6 @@ describe('Task Validator', () => {
       const errors = validateTask(formData);
       const descErrors = errors.filter(e => e.field === 'description');
       expect(descErrors).to.have.length(0);
-    });
-  });
-
-  describe('status validation', () => {
-    test('should return error when status is missing', () => {
-      const formData = createValidFormData({ status: undefined });
-      const errors = validateTask(formData);
-      expect(errors).to.deep.include({
-        field: 'status',
-        text: 'Select a task status',
-        href: '#status',
-      });
-    });
-
-    test('should return error when status is empty', () => {
-      const formData = createValidFormData({ status: '' });
-      const errors = validateTask(formData);
-      expect(errors).to.deep.include({
-        field: 'status',
-        text: 'Select a task status',
-        href: '#status',
-      });
-    });
-
-    test('should return error when status is invalid', () => {
-      const formData = createValidFormData({ status: 'INVALID' });
-      const errors = validateTask(formData);
-      expect(errors).to.deep.include({
-        field: 'status',
-        text: 'Select a valid task status',
-        href: '#status',
-      });
-    });
-
-    test('should pass for PENDING status', () => {
-      const formData = createValidFormData({ status: 'PENDING' });
-      const errors = validateTask(formData);
-      const statusErrors = errors.filter(e => e.field === 'status');
-      expect(statusErrors).to.have.length(0);
-    });
-
-    test('should pass for IN_PROGRESS status', () => {
-      const formData = createValidFormData({ status: 'IN_PROGRESS' });
-      const errors = validateTask(formData);
-      const statusErrors = errors.filter(e => e.field === 'status');
-      expect(statusErrors).to.have.length(0);
-    });
-
-    test('should pass for COMPLETED status', () => {
-      const formData = createValidFormData({ status: 'COMPLETED' });
-      const errors = validateTask(formData);
-      const statusErrors = errors.filter(e => e.field === 'status');
-      expect(statusErrors).to.have.length(0);
     });
   });
 
@@ -370,7 +316,6 @@ describe('Task Validator', () => {
     test('should return multiple errors when multiple fields are invalid', () => {
       const formData: TaskFormData = {
         title: '',
-        status: '',
         'dueDate-day': '',
         'dueDate-month': '',
         'dueDate-year': '',
@@ -380,7 +325,6 @@ describe('Task Validator', () => {
       const errors = validateTask(formData);
       expect(errors.length).to.be.greaterThan(1);
       expect(errors.some(e => e.field === 'title')).to.be.true;
-      expect(errors.some(e => e.field === 'status')).to.be.true;
       expect(errors.some(e => e.field === 'dueDate')).to.be.true;
       expect(errors.some(e => e.field === 'dueTime')).to.be.true;
     });

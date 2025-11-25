@@ -5,7 +5,6 @@
 
 import { TaskFormData, ValidationError } from '../types/task';
 
-const VALID_STATUSES = ['PENDING', 'IN_PROGRESS', 'COMPLETED'];
 const MAX_TITLE_LENGTH = 255;
 const MAX_DESCRIPTION_LENGTH = 1000;
 
@@ -37,21 +36,6 @@ export function validateTask(formData: TaskFormData): ValidationError[] {
       field: 'description',
       text: `Description must be ${MAX_DESCRIPTION_LENGTH} characters or fewer`,
       href: '#description',
-    });
-  }
-
-  // Status validation
-  if (!formData.status) {
-    errors.push({
-      field: 'status',
-      text: 'Select a task status',
-      href: '#status',
-    });
-  } else if (!VALID_STATUSES.includes(formData.status)) {
-    errors.push({
-      field: 'status',
-      text: 'Select a valid task status',
-      href: '#status',
     });
   }
 

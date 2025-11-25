@@ -3,7 +3,6 @@
 {% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
 {% from "govuk/components/input/macro.njk" import govukInput %}
 {% from "govuk/components/textarea/macro.njk" import govukTextarea %}
-{% from "govuk/components/radios/macro.njk" import govukRadios %}
 {% from "govuk/components/date-input/macro.njk" import govukDateInput %}
 {% from "govuk/components/button/macro.njk" import govukButton %}
 
@@ -36,7 +35,6 @@
         {# Get error messages for each field #}
         {% set titleError = getError(errors, "title") | trim %}
         {% set descriptionError = getError(errors, "description") | trim %}
-        {% set statusError = getError(errors, "status") | trim %}
         {% set dueDateError = getError(errors, "dueDate") | trim %}
         {% set dueTimeError = getError(errors, "dueTime") | trim %}
 
@@ -69,31 +67,6 @@
             text: "Provide any additional details about what needs to be done"
           },
           rows: 5
-        }) }}
-
-        {# Status field #}
-        {% set statusItems = [] %}
-        {% for status in statuses %}
-          {% set statusItems = (statusItems.push({
-            value: status.value,
-            text: status.text,
-            checked: (values.status == status.value) if values else (status.value == "PENDING")
-          }), statusItems) %}
-        {% endfor %}
-
-        {{ govukRadios({
-          name: "status",
-          fieldset: {
-            legend: {
-              text: "Status",
-              classes: "govuk-fieldset__legend--m"
-            }
-          },
-          hint: {
-            text: "Select the current status of the task"
-          },
-          items: statusItems,
-          errorMessage: { text: statusError } if statusError else null
         }) }}
 
         {# Due date field #}
