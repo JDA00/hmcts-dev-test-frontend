@@ -8,7 +8,7 @@ A Node.js/Express frontend application for the HMCTS task management system. Thi
 - Express.js 4.18.2
 - TypeScript 5.1.6
 - Nunjucks templating engine
-- GOV.UK Frontend 4.8.0
+- GOV.UK Frontend 4.10.0
 - Webpack 5 for asset bundling
 - Jest for testing
 
@@ -50,9 +50,10 @@ The application provides a task creation form at `/task/create` with the followi
 
 - Title (required, max 255 characters)
 - Description (optional, max 1000 characters)
-- Status (required): PENDING, IN_PROGRESS, or COMPLETED
 - Due Date (required): Day, month, year inputs
 - Due Time (required): Hour and minute inputs in 24-hour format
+
+Status is automatically set to PENDING when a task is created. Status values (PENDING, IN_PROGRESS, COMPLETED) are preserved for viewing existing tasks but are not user-selectable during creation.
 
 ### Validation
 
@@ -131,10 +132,9 @@ Tests for validation logic:
 yarn test:unit
 ```
 
-Coverage: 34 tests covering all validation rules including:
+Covers all validation rules including:
 - Title validation (required, max length)
 - Description validation (optional, max length)
-- Status validation (required, valid values)
 - Date validation (required, valid date, future date)
 - Time validation (required, valid ranges)
 
@@ -145,7 +145,7 @@ Integration tests for HTTP endpoints:
 yarn test:routes
 ```
 
-Coverage: 13 tests covering:
+Covers:
 - GET /task/create - Form display
 - POST /task/create - Validation error handling
 - POST /task/create - Successful submission (mocked backend)
@@ -162,7 +162,6 @@ yarn test:unit && yarn test:routes
 
 - govukInput - Text input fields
 - govukTextarea - Multi-line text input
-- govukRadios - Status selection
 - govukDateInput - Date picker (day/month/year)
 - govukButton - Form submission
 - govukErrorSummary - Validation error display
