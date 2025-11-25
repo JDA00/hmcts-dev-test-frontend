@@ -81,7 +81,6 @@ The frontend communicates with a Spring Boot backend at `http://localhost:4000`.
 POST `/tasks`
 
 Request body:
-
 ```json
 {
   "title": "string",
@@ -92,7 +91,6 @@ Request body:
 ```
 
 Response (201 Created):
-
 ```json
 {
   "id": 1,
@@ -113,13 +111,11 @@ yarn install
 ## Running the Application
 
 Development mode with hot reload:
-
 ```bash
 yarn start:dev
 ```
 
 Production mode:
-
 ```bash
 yarn build:prod
 yarn start
@@ -132,13 +128,11 @@ The application runs on port 3100 by default.
 ### Unit Tests
 
 Tests for validation logic:
-
 ```bash
 yarn test:unit
 ```
 
 Covers all validation rules including:
-
 - Title validation (required, max length)
 - Description validation (optional, max length)
 - Date validation (required, valid date, future date)
@@ -147,13 +141,11 @@ Covers all validation rules including:
 ### Route Tests
 
 Integration tests for HTTP endpoints:
-
 ```bash
 yarn test:routes
 ```
 
 Covers:
-
 - GET /task/create - Form display
 - POST /task/create - Validation error handling
 - POST /task/create - Successful submission (mocked backend)
@@ -182,12 +174,3 @@ yarn test:unit && yarn test:routes
 yarn lint        # Check for issues
 yarn lint:fix    # Auto-fix issues
 ```
-
-## Configuration
-
-Environment configuration files are in the `config/` directory:
-
-- `default.json` - Default settings
-- `dev.json` - Development overrides
-- `production.json` - Production overrides
-- `test.json` - Test overrides
