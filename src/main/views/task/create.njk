@@ -1,0 +1,189 @@
+{% extends "template.njk" %}
+
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+{% from "govuk/components/input/macro.njk" import govukInput %}
+{% from "govuk/components/textarea/macro.njk" import govukTextarea %}
+{% from "govuk/components/radios/macro.njk" import govukRadios %}
+{% from "govuk/components/date-input/macro.njk" import govukDateInput %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+{# Helper macro to get error message for a field #}
+{% macro getError(errors, fieldName) %}
+  {%- if errors -%}
+    {%- for error in errors -%}
+      {%- if error.field == fieldName -%}
+        {{ error.text }}
+      {%- endif -%}
+    {%- endfor -%}
+  {%- endif -%}
+{% endmacro %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+
+      {% if errorSummary and errorSummary.length > 0 %}
+        {{ govukErrorSummary({
+          titleText: "There is a problem",
+          errorList: errorSummary
+        }) }}
+      {% endif %}
+
+      <h1 class="govuk-heading-l">Create a new task</h1>
+
+      <form method="post" action="/task/create" novalidate>
+
+        {# Get error messages for each field #}
+        {% set titleError = getError(errors, "title") | trim %}
+        {% set descriptionError = getError(errors, "description") | trim %}
+        {% set statusError = getError(errors, "status") | trim %}
+        {% set dueDateError = getError(errors, "dueDate") | trim %}
+        {% set dueTimeError = getError(errors, "dueTime") | trim %}
+
+        {# Title field #}
+        {{ govukInput({
+          label: {
+            text: "Task title",
+            classes: "govuk-label--m"
+          },
+          id: "title",
+          name: "title",
+          value: values.title if values else "",
+          errorMessage: { text: titleError } if titleError else null,
+          hint: {
+            text: "Give the task a clear, descriptive title"
+          }
+        }) }}
+
+        {# Description field #}
+        {{ govukTextarea({
+          label: {
+            text: "Description (optional)",
+            classes: "govuk-label--m"
+          },
+          id: "description",
+          name: "description",
+          value: values.description if values else "",
+          errorMessage: { text: descriptionError } if descriptionError else null,
+          hint: {
+            text: "Provide any additional details about what needs to be done"
+          },
+          rows: 5
+        }) }}
+
+        {# Status field #}
+        {% set statusItems = [] %}
+        {% for status in statuses %}
+          {% set statusItems = (statusItems.push({
+            value: status.value,
+            text: status.text,
+            checked: (values.status == status.value) if values else (status.value == "PENDING")
+          }), statusItems) %}
+        {% endfor %}
+
+        {{ govukRadios({
+          name: "status",
+          fieldset: {
+            legend: {
+              text: "Status",
+              classes: "govuk-fieldset__legend--m"
+            }
+          },
+          hint: {
+            text: "Select the current status of the task"
+          },
+          items: statusItems,
+          errorMessage: { text: statusError } if statusError else null
+        }) }}
+
+        {# Due date field #}
+        {{ govukDateInput({
+          id: "dueDate",
+          namePrefix: "dueDate",
+          fieldset: {
+            legend: {
+              text: "Due date",
+              classes: "govuk-fieldset__legend--m"
+            }
+          },
+          hint: {
+            text: "For example, 27 3 2025"
+          },
+          items: [
+            {
+              name: "day",
+              classes: "govuk-input--width-2",
+              value: values["dueDate-day"] if values else ""
+            },
+            {
+              name: "month",
+              classes: "govuk-input--width-2",
+              value: values["dueDate-month"] if values else ""
+            },
+            {
+              name: "year",
+              classes: "govuk-input--width-4",
+              value: values["dueDate-year"] if values else ""
+            }
+          ],
+          errorMessage: { text: dueDateError } if dueDateError else null
+        }) }}
+
+        {# Due time field - custom implementation following GOV.UK patterns #}
+        <div class="govuk-form-group {% if dueTimeError %}govuk-form-group--error{% endif %}">
+          <fieldset class="govuk-fieldset" role="group" aria-describedby="dueTime-hint{% if dueTimeError %} dueTime-error{% endif %}">
+            <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
+              Due time
+            </legend>
+            <div id="dueTime-hint" class="govuk-hint">
+              For example, 14 30 for 2:30pm (use 24-hour format)
+            </div>
+            {% if dueTimeError %}
+              <p id="dueTime-error" class="govuk-error-message">
+                <span class="govuk-visually-hidden">Error:</span> {{ dueTimeError }}
+              </p>
+            {% endif %}
+            <div class="govuk-date-input" id="dueTime">
+              <div class="govuk-date-input__item">
+                <div class="govuk-form-group">
+                  <label class="govuk-label govuk-date-input__label" for="dueTime-hour">
+                    Hour
+                  </label>
+                  <input class="govuk-input govuk-date-input__input govuk-input--width-2{% if dueTimeError %} govuk-input--error{% endif %}"
+                         id="dueTime-hour"
+                         name="dueTime-hour"
+                         type="text"
+                         inputmode="numeric"
+                         value="{{ values['dueTime-hour'] if values else '' }}">
+                </div>
+              </div>
+              <div class="govuk-date-input__item">
+                <div class="govuk-form-group">
+                  <label class="govuk-label govuk-date-input__label" for="dueTime-minute">
+                    Minute
+                  </label>
+                  <input class="govuk-input govuk-date-input__input govuk-input--width-2{% if dueTimeError %} govuk-input--error{% endif %}"
+                         id="dueTime-minute"
+                         name="dueTime-minute"
+                         type="text"
+                         inputmode="numeric"
+                         value="{{ values['dueTime-minute'] if values else '' }}">
+                </div>
+              </div>
+            </div>
+          </fieldset>
+        </div>
+
+        {{ govukButton({
+          text: "Create task"
+        }) }}
+
+      </form>
+
+      <p class="govuk-body">
+        <a href="/" class="govuk-link">Cancel and return to home</a>
+      </p>
+
+    </div>
+  </div>
+{% endblock %}

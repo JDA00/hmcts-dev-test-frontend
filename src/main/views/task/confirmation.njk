@@ -1,0 +1,78 @@
+{% extends "template.njk" %}
+
+{% from "govuk/components/panel/macro.njk" import govukPanel %}
+{% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+
+      {{ govukPanel({
+        titleText: "Task created",
+        html: "Your task reference number<br><strong>" + task.id + "</strong>"
+      }) }}
+
+      <h2 class="govuk-heading-m">Task details</h2>
+
+      {{ govukSummaryList({
+        rows: [
+          {
+            key: {
+              text: "Title"
+            },
+            value: {
+              text: task.title
+            }
+          },
+          {
+            key: {
+              text: "Description"
+            },
+            value: {
+              text: task.description if task.description else "Not provided"
+            }
+          },
+          {
+            key: {
+              text: "Status"
+            },
+            value: {
+              text: task.status | replace("_", " ") | title
+            }
+          },
+          {
+            key: {
+              text: "Due date and time"
+            },
+            value: {
+              text: task.dueDateTime
+            }
+          },
+          {
+            key: {
+              text: "Created"
+            },
+            value: {
+              text: task.createdDate if task.createdDate else "Just now"
+            }
+          }
+        ]
+      }) }}
+
+      <h2 class="govuk-heading-m">What happens next</h2>
+
+      <p class="govuk-body">
+        Your task has been created and added to the system. You can now track its progress.
+      </p>
+
+      <p class="govuk-body">
+        <a href="/task/create" class="govuk-link">Create another task</a>
+      </p>
+
+      <p class="govuk-body">
+        <a href="/" class="govuk-link">Return to home</a>
+      </p>
+
+    </div>
+  </div>
+{% endblock %}
