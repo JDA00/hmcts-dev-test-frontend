@@ -68,9 +68,9 @@ function validateDate(formData: TaskFormData): ValidationError[] {
 
   // Check individual parts
   const missingParts: string[] = [];
-  if (!day) missingParts.push('day');
-  if (!month) missingParts.push('month');
-  if (!year) missingParts.push('year');
+  if (!day) {missingParts.push('day');}
+  if (!month) {missingParts.push('month');}
+  if (!year) {missingParts.push('year');}
 
   if (missingParts.length > 0) {
     errors.push({
@@ -116,11 +116,7 @@ function validateDate(formData: TaskFormData): ValidationError[] {
 
   // Validate the actual date
   const date = new Date(yearNum, monthNum - 1, dayNum);
-  if (
-    date.getFullYear() !== yearNum ||
-    date.getMonth() !== monthNum - 1 ||
-    date.getDate() !== dayNum
-  ) {
+  if (date.getFullYear() !== yearNum || date.getMonth() !== monthNum - 1 || date.getDate() !== dayNum) {
     errors.push({
       field: 'dueDate',
       text: 'Due date must be a real date',
@@ -162,8 +158,8 @@ function validateTime(formData: TaskFormData): ValidationError[] {
 
   // Check individual parts
   const missingParts: string[] = [];
-  if (!hour) missingParts.push('hour');
-  if (!minute) missingParts.push('minute');
+  if (!hour) {missingParts.push('hour');}
+  if (!minute) {missingParts.push('minute');}
 
   if (missingParts.length > 0) {
     errors.push({

@@ -3,8 +3,9 @@
  * Separated from routes to allow easy mocking in tests and centralised error handling.
  */
 
-import axios, { AxiosError } from 'axios';
 import { Task } from '../types/task';
+
+import axios, { AxiosError } from 'axios';
 
 const BACKEND_URL = 'http://localhost:4000';
 

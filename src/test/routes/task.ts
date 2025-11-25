@@ -1,7 +1,8 @@
 import { app } from '../../main/app';
+
 import { expect } from 'chai';
-import request from 'supertest';
 import nock from 'nock';
+import request from 'supertest';
 
 describe('Task routes', () => {
   beforeEach(() => {
@@ -97,16 +98,14 @@ describe('Task routes', () => {
 
     describe('successful submission', () => {
       test('should create task and show confirmation', async () => {
-        nock('http://localhost:4000')
-          .post('/tasks')
-          .reply(201, {
-            id: 123,
-            title: 'Test Task',
-            description: 'Test description',
-            status: 'PENDING',
-            dueDateTime: '2025-12-25T14:30:00',
-            createdDate: '2025-01-15T10:00:00',
-          });
+        nock('http://localhost:4000').post('/tasks').reply(201, {
+          id: 123,
+          title: 'Test Task',
+          description: 'Test description',
+          status: 'PENDING',
+          dueDateTime: '2025-12-25T14:30:00',
+          createdDate: '2025-01-15T10:00:00',
+        });
 
         await request(app)
           .post('/task/create')
@@ -128,15 +127,13 @@ describe('Task routes', () => {
       });
 
       test('should handle optional description being empty', async () => {
-        nock('http://localhost:4000')
-          .post('/tasks')
-          .reply(201, {
-            id: 456,
-            title: 'Task Without Description',
-            status: 'PENDING',
-            dueDateTime: '2025-12-25T14:30:00',
-            createdDate: '2025-01-15T10:00:00',
-          });
+        nock('http://localhost:4000').post('/tasks').reply(201, {
+          id: 456,
+          title: 'Task Without Description',
+          status: 'PENDING',
+          dueDateTime: '2025-12-25T14:30:00',
+          createdDate: '2025-01-15T10:00:00',
+        });
 
         await request(app)
           .post('/task/create')

@@ -1,5 +1,6 @@
-import { validateTask, buildDateTimeFromForm } from '../../main/validators/taskValidator';
 import { TaskFormData } from '../../main/types/task';
+import { buildDateTimeFromForm, validateTask } from '../../main/validators/taskValidator';
+
 import { expect } from 'chai';
 
 describe('Task Validator', () => {
