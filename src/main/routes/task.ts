@@ -4,10 +4,18 @@
  */
 
 import { TaskServiceError, createTask } from '../services/taskService';
-import { TaskFormData } from '../types/task';
+import { TaskFormData, ValidationError } from '../types/task';
 import { buildDateTimeFromForm, validateTask } from '../validators/taskValidator';
 
 import { Application, Request, Response } from 'express';
+
+/**
+ * Helper to extract error message for a specific field
+ */
+const getErrorMessage = (errors: ValidationError[], field: string): string | null => {
+  const error = errors.find(e => e.field === field);
+  return error?.text || null;
+};
 
 export default function (app: Application): void {
   /**
@@ -28,9 +36,12 @@ export default function (app: Application): void {
 
     if (errors.length > 0) {
       return res.render('task/create', {
-        errors,
         errorSummary: errors,
         values: formData,
+        titleError: getErrorMessage(errors, 'title'),
+        descriptionError: getErrorMessage(errors, 'description'),
+        dueDateError: getErrorMessage(errors, 'dueDate'),
+        dueTimeError: getErrorMessage(errors, 'dueTime'),
       });
     }
 

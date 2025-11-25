@@ -6,17 +6,6 @@
 {% from "govuk/components/date-input/macro.njk" import govukDateInput %}
 {% from "govuk/components/button/macro.njk" import govukButton %}
 
-{# Helper macro to get error message for a field #}
-{% macro getError(errors, fieldName) %}
-  {%- if errors -%}
-    {%- for error in errors -%}
-      {%- if error.field == fieldName -%}
-        {{ error.text }}
-      {%- endif -%}
-    {%- endfor -%}
-  {%- endif -%}
-{% endmacro %}
-
 {% block content %}
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
@@ -31,12 +20,6 @@
       <h1 class="govuk-heading-l">Create a new task</h1>
 
       <form method="post" action="/task/create" novalidate>
-
-        {# Get error messages for each field #}
-        {% set titleError = getError(errors, "title") | trim %}
-        {% set descriptionError = getError(errors, "description") | trim %}
-        {% set dueDateError = getError(errors, "dueDate") | trim %}
-        {% set dueTimeError = getError(errors, "dueTime") | trim %}
 
         {# Title field #}
         {{ govukInput({
